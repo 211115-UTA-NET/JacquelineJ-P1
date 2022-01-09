@@ -4,7 +4,8 @@ namespace Project1WebApp.Repository
 {
     public interface IProductRepository
     {
-        int AddProduct(ProductModel product);
-        List<ProductModel> GetAllProducts();
+        public List<ProductModel> getProducts(int storeId);
+        public List<ProductModel> addNewProduct(ProductModel product);
+        public List<ProductModel> updateProductQuantity(int ProductId, int ProductQuantity);
     }
 }

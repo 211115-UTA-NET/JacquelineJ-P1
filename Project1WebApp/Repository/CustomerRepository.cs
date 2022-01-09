@@ -12,6 +12,9 @@ namespace Project1WebApp.Repository
 {
     public class CustomerRepository : ICustomerRepository
     {
+        public CustomerRepository()
+        {
+        }
 
         public List<CustomerModel> getCustomers(string cusName)
         {
@@ -19,6 +22,7 @@ namespace Project1WebApp.Repository
             CustomerModel customerObject = new CustomerModel();
             DatabaseConnection objDB = new DatabaseConnection();
             SqlConnection connectionObj = objDB.DBConnection();
+
             List<CustomerModel> customerList = new List<CustomerModel>();
 
             string customerSelectQuery = "Select * from Customer";
@@ -55,9 +59,57 @@ namespace Project1WebApp.Repository
             {
                 Console.WriteLine(" Query Not Executed : " + ex.Message);
             }
-            finally { connectionObj.Close(); }
-            return customerList;
+            finally
+            {
+                connectionObj.Close();
+            }
+                return customerList;
         }
-    }
 
+        public List<CustomerModel> addCustomerNew(CustomerModel customer)
+        {
+            //insert into Customer (CustomerFirstName, CustomerLastName, C_Address1, C_Address2) values
+            //('Tom', 'Hanks', 'Enfield', 'CT');
+            Console.WriteLine("In Customer add ");
+
+            string firstName = customer.Customer_FirstName;
+            string lastName = customer.Customer_LastName;
+            string customer_City = customer.Customer_City;
+            string customer_State = customer.Customer_State;
+
+            CustomerModel customerObject = new CustomerModel();
+            DatabaseConnection objDB = new DatabaseConnection();
+            SqlConnection connectionObj = objDB.DBConnection();
+
+            //SqlConnectionApp objDB = new SqlConnectionApp();
+            //SqlConnection connectionObj = objDB.DBConnection();
+            using (connectionObj)
+            {
+                Console.WriteLine("Enter Customer data ");
+                // Query to be executed
+                string queryString = "Insert into Customer (CustomerFirstName,CustomerLastName,C_Address1,C_Address2) Values "
+                    + "(@cust_FirstName,@cust_LastName,@cust_AddressCity,@cust_AddressState)";
+
+                SqlCommand command = new SqlCommand(queryString, connectionObj);
+                command.Parameters.AddWithValue("@cust_FirstName", firstName);
+                command.Parameters.AddWithValue("@cust_LastName", lastName);
+                command.Parameters.AddWithValue("@cust_AddressCity", customer_City);
+                command.Parameters.AddWithValue("@cust_AddressState", customer_State);
+                try
+                {
+
+                    command.ExecuteNonQuery();
+                    Console.WriteLine("ExecuteNonQuery");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+
+                }
+                finally { connectionObj.Close(); }
+            }
+            return null;
+        }
+        
+    }
 }
