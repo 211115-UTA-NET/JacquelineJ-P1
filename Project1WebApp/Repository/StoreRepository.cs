@@ -10,11 +10,6 @@ namespace Project1WebApp.Repository
         {
             Console.WriteLine("In Store add ");
 
-            int storeId = store.StoreId;
-            string storeName = store.StoreName;
-            string s_Address = store.S_Address;           
-            int zipCode = store.ZipCode;
-
             StoreModel storeObject = new StoreModel();
             DatabaseConnection objDB = new DatabaseConnection();
             SqlConnection connectionObj = objDB.DBConnection();
@@ -27,10 +22,10 @@ namespace Project1WebApp.Repository
                     + "(@storeId,@storeName,@s_Address,@zipCode)";
 
                 SqlCommand command = new SqlCommand(queryString, connectionObj);
-                command.Parameters.AddWithValue("@storeId", storeId);
-                command.Parameters.AddWithValue("@storeName", storeName);               
-                command.Parameters.AddWithValue("@s_Address", s_Address);
-                command.Parameters.AddWithValue("@zipCode", zipCode);
+                command.Parameters.AddWithValue("@storeId", store.StoreId);
+                command.Parameters.AddWithValue("@storeName", store.Name);               
+                command.Parameters.AddWithValue("@s_Address", store.Address);
+                command.Parameters.AddWithValue("@zipCode", store.Zipcode);
                 try
                 {
 
@@ -47,6 +42,11 @@ namespace Project1WebApp.Repository
             return null;
         }
 
+        public List<StoreModel> getStores()
+        {
+            return getStores(0);
+        }
+
         public List<StoreModel> getStores(int storeId)
         {
             //private List<ProductModel> products = new List<ProductModel>();
@@ -59,32 +59,29 @@ namespace Project1WebApp.Repository
             string storeSelectQuery = "Select * from Store";
             StringBuilder stringBuilderObj = new StringBuilder();
             stringBuilderObj.Append(storeSelectQuery);
-            if (storeId != 0)
+            if (storeId > 0)
             {
-                int id = Convert.ToInt32(storeId);
+                //int id = Convert.ToInt32(storeId);
                 stringBuilderObj.Append(" Where StoreId = " + storeId + "");
             }
             string Query = stringBuilderObj.ToString();
-            //Console.WriteLine("CustomerController : results : Fetching from Customer table" + Query);
+            Console.WriteLine("CustomerController : results : Fetching from Customer table" + Query);
             try
             {
                 SqlDataReader reader = objDB.FetchProducts(Query, connectionObj);
-
 
                 using (reader)
                 {
                     while (reader.Read())
                     {
-
                         storeObject = new StoreModel();
                         storeObject.StoreId = reader.GetInt32(0);
-                        storeObject.StoreName = reader.GetString(1);
-                        storeObject.S_Address = reader.GetString(2);
-                        storeObject.ZipCode = reader.GetInt32(3);
+                        storeObject.Name = reader.GetString(1);
+                        storeObject.Address = reader.GetString(2);
+                        storeObject.Zipcode = reader.GetString(3);
                         storeList.Add(storeObject);
                     }
                     //Console.WriteLine("Customer objects created :");
-
                 }
             }
             catch (Exception ex)

@@ -17,7 +17,7 @@ namespace Project1WebApp.Controllers
         }
         private List<StoreModel> result = null;
 
-        [HttpPost("add_store")]
+        [HttpPost("addStore")]
         public IActionResult AddStore([FromForm] StoreModel store)
         {
             Console.WriteLine("AddStore method555");
@@ -28,8 +28,8 @@ namespace Project1WebApp.Controllers
         }
 
         
-        [HttpGet("get_all_stores")]
-        public IActionResult GetStore()
+        [HttpGet("stores")]
+        public IActionResult GetStores()
         {
             Console.WriteLine("GetAllStore method11111111111111");
             //CustomerRepository repository = new CustomerRepository();
@@ -40,8 +40,8 @@ namespace Project1WebApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get_store_id/{storeId}")]
-        public IActionResult GetProductsByStoreId(int storeId)
+        [HttpGet("stores/{storeId}")]
+        public IActionResult GetStoreById(int storeId)
         {
             Console.WriteLine("GetStore method333333333");
             //CustomerRepository repository = new CustomerRepository();

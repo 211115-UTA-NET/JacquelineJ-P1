@@ -44,11 +44,11 @@ namespace Project1WebApp.Repository
                     while (reader.Read())
                     {
                         customerObj = new CustomerModel();
-                        customerObj.Customer_Id = reader.GetInt32(0);
-                        customerObj.Customer_FirstName = reader.GetString(1);
-                        customerObj.Customer_LastName = reader.GetString(2);
-                        customerObj.Customer_City = reader.GetString(3);
-                        customerObj.Customer_State = reader.GetString(4);
+                        customerObj.CustomerId = reader.GetInt32(0);
+                        customerObj.CustomerFirstName = reader.GetString(1);
+                        customerObj.CustomerLastName = reader.GetString(2);
+                        customerObj.C_Address1 = reader.GetString(3);
+                        customerObj.C_Address2 = reader.GetString(4);
                         customerList.Add(customerObj);
                     }
                     //Console.WriteLine("Customer objects created :");
@@ -72,11 +72,6 @@ namespace Project1WebApp.Repository
             //('Tom', 'Hanks', 'Enfield', 'CT');
             Console.WriteLine("In Customer add ");
 
-            string firstName = customer.Customer_FirstName;
-            string lastName = customer.Customer_LastName;
-            string customer_City = customer.Customer_City;
-            string customer_State = customer.Customer_State;
-
             CustomerModel customerObject = new CustomerModel();
             DatabaseConnection objDB = new DatabaseConnection();
             SqlConnection connectionObj = objDB.DBConnection();
@@ -88,13 +83,13 @@ namespace Project1WebApp.Repository
                 Console.WriteLine("Enter Customer data ");
                 // Query to be executed
                 string queryString = "Insert into Customer (CustomerFirstName,CustomerLastName,C_Address1,C_Address2) Values "
-                    + "(@cust_FirstName,@cust_LastName,@cust_AddressCity,@cust_AddressState)";
+                    + "(@customerFirstName,@customerLastName,@c_Address1,@c_Address2)";
 
                 SqlCommand command = new SqlCommand(queryString, connectionObj);
-                command.Parameters.AddWithValue("@cust_FirstName", firstName);
-                command.Parameters.AddWithValue("@cust_LastName", lastName);
-                command.Parameters.AddWithValue("@cust_AddressCity", customer_City);
-                command.Parameters.AddWithValue("@cust_AddressState", customer_State);
+                command.Parameters.AddWithValue("@customerFirstName", customer.CustomerFirstName);
+                command.Parameters.AddWithValue("@customerLastName", customer.CustomerLastName);
+                command.Parameters.AddWithValue("@c_Address1", customer.C_Address1);
+                command.Parameters.AddWithValue("@c_Address2", customer.C_Address2);
                 try
                 {
 

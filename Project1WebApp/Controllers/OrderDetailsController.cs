@@ -42,22 +42,22 @@ namespace Project1WebApp.Controllers
         }
 
 
-        [HttpGet("store/{store_Id}")]
-        public IActionResult GetOrdersByStore(string storeId)
+        [HttpGet("stores/{store_Id}")]
+        public IActionResult GetOrdersByStore(int store_Id)
         {
             Console.WriteLine("GetOrdersByStore method");
             //CustomerRepository repository = new CustomerRepository();
             
-            result = _orderDetailspository.getOrdersByStore(storeId);
+            result = _orderDetailspository.getOrdersByStore(store_Id);
             //Console.WriteLine("GetCustomer method333 -- " + result);
 
             return Ok(result);
         }
 
-        [HttpGet("cust_id/{cust_Id}")]
+        [HttpGet("customers/{cust_Id}")]
         public IActionResult GetOrdersByCostumerId(string cust_Id)
         {
-            Console.WriteLine("GetOrdersByStore method");
+            Console.WriteLine("GetOrdersByCostumerId method");
             //CustomerRepository repository = new CustomerRepository();
 
             result = _orderDetailspository.getOrdersByCustomer(cust_Id);

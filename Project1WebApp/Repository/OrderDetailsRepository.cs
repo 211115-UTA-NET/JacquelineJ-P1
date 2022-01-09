@@ -51,43 +51,21 @@ namespace Project1WebApp.Repository
                 try
                 {
                     SqlDataReader reader = command.ExecuteReader();
-                    OrderDetailsModel orderDetailsObject;
-                    while (reader.Read())
-                    {
-                        orderDetailsObject = new OrderDetailsModel();
-                        orderDetailsObject.Order_Id = reader.GetInt32(0);
-                        orderDetailsObject.Cust_Id = reader.GetInt32(1);
-                        orderDetailsObject.Cust_FName = reader.GetString(2);
-                        orderDetailsObject.Cust_LName = reader.GetString(3);
-                        orderDetailsObject.Prod_Id = reader.GetInt32(4);
-                        orderDetailsObject.Prod_Name = reader.GetString(5);
-                        orderDetailsObject.Prod_Quantity = reader.GetInt32(6);
-                        orderDetailsObject.Store_Id = reader.GetInt32(7);
-                        orderDetailsObject.Store_Name = reader.GetString(8);
-                        orderDetailsObject.Order_Time = reader.GetDateTime(9);
-                        orderDetailsList.Add(orderDetailsObject);
-                    }
+                    orderDetailsList = getOrdersAsList(reader);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(" Query Not Executed : " + ex.Message);
                 }
                 finally { connectionObj.Close(); }
-                foreach (OrderDetailsModel item in orderDetailsList)
-                {
-                    Console.WriteLine("Order_Id: " + item.Order_Id + "  Customer_Id: " + item.Cust_Id + "  Customer FirstName: " + item.Cust_FName + "   Customer LastName: " + item.Cust_LName +
-                        "   Product_Id: " + item.Prod_Id + "   Product_Name: " + item.Prod_Name + "    Product_Quantity: " + item.Prod_Quantity + "   Store_Id: " + item.Store_Id +
-                        "    Store_Name: " + item.Store_Name + "    Order_time: " + item.Order_Time);
-
-                }
-                Console.WriteLine("Fetch Complete...");
+                
             }
             return orderDetailsList;
         }
 
-        public List<OrderDetailsModel> getOrdersByStore(string storeId)
+        public List<OrderDetailsModel> getOrdersByStore(int storeId)
         {
-            Console.WriteLine("getting order details by orderId " + storeId);
+            Console.WriteLine("getOrdersByStore -- " + storeId);
 
             DatabaseConnection objDB = new DatabaseConnection();
             SqlConnection connectionObj = objDB.DBConnection();
@@ -106,57 +84,32 @@ namespace Project1WebApp.Repository
                 StringBuilder stringbuilderObject = new StringBuilder();
                 stringbuilderObject.Append(queryString);
                 SqlCommand command;
-                if (storeId != null && storeId.Length > 0)
+                if (storeId > 0)
                 {
-                    int id = Convert.ToInt32(storeId);
                     stringbuilderObject.Append(" and s.StoreId = @StoreId");
                     command = new SqlCommand(stringbuilderObject.ToString(), connectionObj);
-                    command.Parameters.AddWithValue("@StoreId", id);
+                    command.Parameters.AddWithValue("@StoreId", storeId);
                 }
                 else
                 {
                     command = new SqlCommand(queryString, connectionObj);
                 }
-
-                Console.WriteLine("OrderController : Query : ");
+                
                 try
                 {
                     SqlDataReader reader = command.ExecuteReader();
-                    OrderDetailsModel orderObj;
-                    while (reader.Read())
-                    {
-                        orderObj = new OrderDetailsModel();
-                        orderObj.Order_Id = reader.GetInt32(0);
-                        orderObj.Cust_Id = reader.GetInt32(1);
-                        orderObj.Cust_FName = reader.GetString(2);
-                        orderObj.Cust_LName = reader.GetString(3);
-                        orderObj.Prod_Id = reader.GetInt32(4);
-                        orderObj.Prod_Name = reader.GetString(5);
-                        orderObj.Prod_Quantity = reader.GetInt32(6);
-                        orderObj.Store_Id = reader.GetInt32(7);
-                        orderObj.Store_Name = reader.GetString(8);
-                        orderObj.Order_Time = reader.GetDateTime(9);
-                        orderDetailsList.Add(orderObj);
-                    }
+                    orderDetailsList = getOrdersAsList(reader);                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(" Query Not Executed : " + ex.Message);
                 }
                 finally { connectionObj.Close(); }
-                foreach (OrderDetailsModel item in orderDetailsList)
-                {
-                    Console.WriteLine("Order_Id: " + item.Order_Id + "  Customer_Id: " + item.Cust_Id + " Customer FirstName: " + item.Cust_FName + " Customer LastName: " + item.Cust_LName +
-                        " Product_Id: " + item.Prod_Id + " Product_Name: " + item.Prod_Name + " Product_Quantity: " + item.Prod_Quantity + " Store_Id: " + item.Store_Id +
-                        " Store_Name: " + item.Store_Name + " Order_time: " + item.Order_Time);
-
-                }
-                Console.WriteLine("Fetch Complete...");
-
+                
             }
             return orderDetailsList;
         }
-
+ 
         public List<OrderDetailsModel> getOrdersByCustomer(string customerId)
         {
             Console.WriteLine("getting order details by orderId " + customerId);
@@ -192,39 +145,37 @@ namespace Project1WebApp.Repository
                 try
                 {
                     SqlDataReader reader = command.ExecuteReader();
-                    OrderDetailsModel orderObj;
-                    while (reader.Read())
-                    {
-                        orderObj = new OrderDetailsModel();
-                        orderObj.Order_Id = reader.GetInt32(0);
-                        orderObj.Cust_Id = reader.GetInt32(1);
-                        orderObj.Cust_FName = reader.GetString(2);
-                        orderObj.Cust_LName = reader.GetString(3);
-                        orderObj.Prod_Id = reader.GetInt32(4);
-                        orderObj.Prod_Name = reader.GetString(5);
-                        orderObj.Prod_Quantity = reader.GetInt32(6);
-                        orderObj.Store_Id = reader.GetInt32(7);
-                        orderObj.Store_Name = reader.GetString(8);
-                        orderObj.Order_Time = reader.GetDateTime(9);
-                        orderDetailsList.Add(orderObj);
-                    }
+                    orderDetailsList = getOrdersAsList(reader);                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(" Query Not Executed : " + ex.Message);
                 }
-                finally { connectionObj.Close(); }
-                foreach (OrderDetailsModel item in orderDetailsList)
-                {
-                    Console.WriteLine("Order_Id: " + item.Order_Id + "  Customer_Id: " + item.Cust_Id + " Customer FirstName: " + item.Cust_FName + " Customer LastName: " + item.Cust_LName +
-                        " Product_Id: " + item.Prod_Id + " Product_Name: " + item.Prod_Name + " Product_Quantity: " + item.Prod_Quantity + " Store_Id: " + item.Store_Id +
-                        " Store_Name: " + item.Store_Name + " Order_time: " + item.Order_Time);
-
-                }
-                Console.WriteLine("Fetch Complete...");
-
+                finally { connectionObj.Close(); }                
             }
             return orderDetailsList;
+        }
+
+        private List<OrderDetailsModel> getOrdersAsList(SqlDataReader reader)
+        {
+            List<OrderDetailsModel> orderDetails = new List<OrderDetailsModel>();
+            OrderDetailsModel orderObj = null;
+            while (reader.Read())
+            {
+                orderObj = new OrderDetailsModel();
+                orderObj.Order_Id = reader.GetInt32(0);
+                orderObj.Cust_Id = reader.GetInt32(1);
+                orderObj.Cust_FName = reader.GetString(2);
+                orderObj.Cust_LName = reader.GetString(3);
+                orderObj.Prod_Id = reader.GetInt32(4);
+                orderObj.Prod_Name = reader.GetString(5);
+                orderObj.Prod_Quantity = reader.GetInt32(6);
+                orderObj.Store_Id = reader.GetInt32(7);
+                orderObj.Store_Name = reader.GetString(8);
+                orderObj.Order_Time = reader.GetDateTime(9);
+                orderDetails.Add(orderObj);
+            }
+            return orderDetails;
         }
     }
 }

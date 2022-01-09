@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Project1WebApp.Data;
 using Project1WebApp.Models;
 using Project1WebApp.Repository;
 
@@ -41,6 +42,11 @@ namespace Project1WebApp.Controllers
             return Ok(result);
         }
 
-
+        [HttpPost("addorder")]
+        public IActionResult AddOrder([FromBody] List<OrderRequest> orderReq)
+        {
+            Console.WriteLine("Adding Order...");
+            return Ok("Created Order with Order-ID: "+ _orderRepository.addOrder(orderReq));
+        }
     }
 }

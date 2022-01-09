@@ -2,11 +2,11 @@
 {
     public class CustomerModel
     {
-        public int Customer_Id { get; set; }
-        public string? Customer_FirstName { get; set; }
-        public string? Customer_LastName { get; set; }
-        public string? Customer_City { get; set; }
+        public int CustomerId { get; set; }
+        public string CustomerFirstName { get; set; }
+        public string CustomerLastName { get; set; }
+        public string C_Address1 { get; set; }
         
-        public string? Customer_State { get; set; }
+        public string C_Address2 { get; set; }
     }
 }

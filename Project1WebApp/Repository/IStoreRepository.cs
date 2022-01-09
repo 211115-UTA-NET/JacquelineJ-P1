@@ -5,6 +5,7 @@ namespace Project1WebApp.Repository
     public interface IStoreRepository
     {
         public List<StoreModel> addNewStore(StoreModel store);
+        public List<StoreModel> getStores();
         public List<StoreModel> getStores(int storeId);
     }
 }

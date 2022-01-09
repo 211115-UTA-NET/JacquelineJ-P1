@@ -8,8 +8,8 @@ namespace Project1WebApp.Models
     public class StoreModel
     {
         public int StoreId { get; set; }
-        public string StoreName { get; set; }
-        public string S_Address { get; set; }
-        public int ZipCode { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string Zipcode { get; set; }
     }
 }
