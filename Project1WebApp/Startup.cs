@@ -24,27 +24,18 @@ namespace Project1WebApp
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            StringBuilder stringbuilderObject = new StringBuilder();
-            string path = "C:\\Users\\ashwi\\OneDrive\\Desktop\\.NET\\PROJECT0\\DBproperties.txt";
-            StreamReader reader = new StreamReader(path);
-            stringbuilderObject.Append("Data Source=2111-sql-jack.database.windows.net;Initial Catalog=jackie_Project0DB;Persist Security Info=False;User ID=");
-            stringbuilderObject.Append(reader.ReadLine());
-            stringbuilderObject.Append("; Password =");
-            stringbuilderObject.Append(reader.ReadLine());
-            reader.Close();
-            string connectStr = stringbuilderObject.ToString();
+            string connectionString = Configuration.GetConnectionString("Store-DB-Connection");
 
-            services.AddDbContext<StoreContext>(
-                options => options.UseSqlServer(connectStr));
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<CustomMiddleware1>();
 
-
+            services.AddSingleton<IDBRepository>(provider => new DBRepository(connectionString));
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<ICustomerRepository, CustomerRepository>();
             services.AddSingleton<IOrderRepository, OrderRepository>();
             services.AddSingleton<IOrderDetailsRepository, OrderDetailsRepository>();
             services.AddSingleton<IStoreRepository, StoreRepository>();
+
         }
 
       public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

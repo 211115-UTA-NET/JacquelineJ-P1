@@ -15,39 +15,31 @@ namespace Project1WebApp.Controllers
         {
             _storeRepository = storeRepository;
         }
-        private List<StoreModel> result = null;
+        private List<StoreModel> results = null;
+        private StoreModel result = null;
 
         [HttpPost("addStore")]
-        public IActionResult AddStore([FromForm] StoreModel store)
+        public IActionResult AddStore([FromBody] StoreModel store)
         {
-            Console.WriteLine("AddStore method555");
-            result = _storeRepository.addNewStore(store);
-            Console.WriteLine("add_customer");
-            return Ok("AddStore created method666...");
-
+            Console.WriteLine("Adding Store");
+            _storeRepository.addNewStore(store);
+            return Ok("Created Store ");
         }
-
         
         [HttpGet("stores")]
         public IActionResult GetStores()
         {
-            Console.WriteLine("GetAllStore method11111111111111");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- " + repository);
-            result = _storeRepository.getStores(0);
-            Console.WriteLine("Done All products method2 -- " + result);
-
-            return Ok(result);
+            Console.WriteLine("Get All Stores");
+            results = _storeRepository.getAllStores();
+            return Ok(results);
         }
 
-        [HttpGet("stores/{storeId}")]
+        [HttpGet("stores/{storeId:int}")]
         public IActionResult GetStoreById(int storeId)
         {
-            Console.WriteLine("GetStore method333333333");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- " + repository);
-            result = _storeRepository.getStores(storeId);
-            Console.WriteLine("GetStore method4111111144444444 -- " + result);
+            Console.WriteLine("Get Store by StoreId - "+ storeId);
+            result = _storeRepository.getStore(storeId);
+            Console.WriteLine("Get Store by StoreId " + result);
 
             return Ok(result);
         }

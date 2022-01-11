@@ -1,0 +1,8 @@
+#
+FROM 
+MAINTAINER  <jacqueline.jabraj@revature.net>
+
+RUN apt-get update
+
+CMD ["echo","Hello World...!! "]
+

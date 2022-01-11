@@ -21,34 +21,17 @@ namespace Project1WebApp.Controllers
         [HttpGet("")]
         public IActionResult GetCustomers()
         {
-           //Console.WriteLine("GetCustomer method111");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- "+ repository);
+           Console.WriteLine("GetCustomers ");
             result = _customerRepository.getCustomers(null);
-            //Console.WriteLine("GetCustomer method333 -- "+result);
-
             return Ok(result);
         }
 
-        [HttpGet("{cusName}")]
+        [HttpGet("{cusName:alpha}")]
         public IActionResult GetCustomerByName(string cusName)
-        {
-            //Console.WriteLine("GetCustomer method111");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- "+ repository);
+        {            
             result = _customerRepository.getCustomers(cusName);
-            //Console.WriteLine("GetCustomer method333 -- "+result);
-
             return Ok(result);
         }
-        /*
-          public int Customer_Id { get; set; }
-        public string? Customer_FirstName { get; set; }
-        public string? Customer_LastName { get; set; }
-        public string? Customer_City { get; set; }
-        
-        public string? Customer_State { get; set; }
-         */
 
         [HttpPost("add_customer")]
         public IActionResult AddCustomer([FromForm]CustomerModel customer)
@@ -58,15 +41,6 @@ namespace Project1WebApp.Controllers
             Console.WriteLine("add_customer");
            return Ok("customer created...");
 
-        }
-        /*
-
-        [HttpPost("addcountry3")]
-        public IActionResult AddCountry()
-        {
-            return Ok($"Name = {this.Country.Name}, State = {this.Country.State}, Zipcode = {this.Country.Zipcode}");
-
-        }
-        */
+        }        
     }
 }

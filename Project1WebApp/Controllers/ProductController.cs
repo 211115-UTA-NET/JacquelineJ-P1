@@ -30,52 +30,40 @@ namespace Project1WebApp.Controllers
 
 
         private List<ProductModel> result = null;
-        [HttpGet("get_all_products")]
+        [HttpGet("products")]
         public IActionResult GetProducts()
         {
-            Console.WriteLine("GetAllProduct method1");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- " + repository);
+            Console.WriteLine("GetAllProduct start");
             result = _productRepository.getProducts(0);
-            Console.WriteLine("Done All products method2 -- " + result);
-
+            Console.WriteLine("Done GetAllProduct " + result);
             return Ok(result);
         }
 
-        [HttpGet("get_product_id/{storeId}")]
+        [HttpGet("products/{storeId:int}")]
         public IActionResult GetProductsByStoreId(int storeId)
         {
-            Console.WriteLine("GetProduct method3");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- " + repository);
+            Console.WriteLine("GetProductsByStoreId start");
             result = _productRepository.getProducts(storeId);
-            Console.WriteLine("GetProduct method4 -- " + result);
-
+            Console.WriteLine("Done GetProductsByStoreId -- " + result);
             return Ok(result);
         }
 
-        [HttpPost("add_product")]
+        [HttpPost("add")]
         public IActionResult AddProduct([FromForm] ProductModel product)
         {
-            Console.WriteLine("AddProduct method555");
-            result = _productRepository.addNewProduct(product);
-            Console.WriteLine("add_customer");
-            return Ok("AddProduct created method666...");
-
+            Console.WriteLine("AddProduct start..");
+            _productRepository.addNewProduct(product);
+            return Ok("Added Product ..");
         }
 
-
-        [HttpPatch("update_prod_quantity")]
+        [HttpPatch("update")]
         public IActionResult UpdateProductQuantity([FromForm] JsonPatchDocument product, [FromForm] int ProductId, [FromForm] int ProductQuantity)
         {
-            Console.WriteLine("UpdateProduct method777");
-            result = _productRepository.updateProductQuantity(ProductId, ProductQuantity);
-            Console.WriteLine("add_customer");
-            return Ok("UpdateProduct created method888...");
-
+            Console.WriteLine(" UpdateProductQuantity Start ..");
+            _productRepository.updateProductQuantity(ProductId, ProductQuantity);            
+            return Ok("Updated Product Quantity...");
         }
     } 
-
 }
 
 

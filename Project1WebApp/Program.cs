@@ -13,13 +13,13 @@ namespace Project1WebApp
 
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>        
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
              Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webHost =>
                 {
                     webHost.UseStartup<Startup>();
 
-                });      
+                });
 
     }
 }

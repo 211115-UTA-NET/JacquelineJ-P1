@@ -30,14 +30,12 @@ namespace Project1WebApp.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{order_Id}")]
-        public IActionResult GetOrdersByOrderId(int order_Id)
+        [HttpGet("{orderId:int}")]
+        public IActionResult GetOrdersByOrderId(int orderId)
         {
-            Console.WriteLine("GetCustomer method111");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- " + repository);
-            result = _orderRepository.getOrder(order_Id);
-            Console.WriteLine("GetCustomer method333 -- " + result);
+            Console.WriteLine("GetOrdersByOrderId");
+            result = _orderRepository.getOrder(orderId);
+            Console.WriteLine("GetOrdersByOrderId Order returned -- " + result);
 
             return Ok(result);
         }

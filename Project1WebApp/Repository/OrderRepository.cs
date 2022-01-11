@@ -1,4 +1,5 @@
 ﻿using Project1WebApp.Models;
+using Project1WebApp.Repository;
 using Project1WebApp.Data;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,20 @@ namespace Project1WebApp.Repository
 {
     public class OrderRepository : IOrderRepository
     {
+        private readonly IDBRepository _repository;
+        private readonly IProductRepository _productRepository;
+        public OrderRepository(IDBRepository repository, IProductRepository productRepository)
+        {
+            _repository = repository;
+            _productRepository = productRepository;
+        }
         public List<OrderModel> getOrder(int order_Id)
         {
             //private List<ProductModel> products = new List<ProductModel>();
             Console.WriteLine("OrderController : results : Fetching from Order table");
             OrderModel orderObject = new OrderModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+
+            SqlConnection connectionObj = _repository.DBConnection();
             List<OrderModel> orderList = new List<OrderModel>();
 
             string customerSelectQuery = "Select * from Order_";
@@ -32,21 +40,17 @@ namespace Project1WebApp.Repository
             //Console.WriteLine("CustomerController : results : Fetching from Customer table" + Query);
             try
             {
-                SqlDataReader reader = objDB.FetchProducts(Query, connectionObj);
-
-
+                SqlDataReader reader = _repository.FetchProducts(Query, connectionObj);
                 using (reader)
                 {
                     while (reader.Read())
                     {
-
                         orderObject = new OrderModel();
                         orderObject.Order_Id = reader.GetInt32(0);
                         orderObject.Cust_Id = reader.GetInt32(1);
                         orderObject.Order_Time = reader.GetDateTime(2);                        
                         orderList.Add(orderObject);
-                    }                   
-
+                    }             
                 }
             }
             catch (Exception ex)
@@ -63,16 +67,12 @@ namespace Project1WebApp.Repository
             Console.WriteLine("In order add ");
 
             OrderRequest orderReq = null;
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
             int newOrderId = 0;
             Boolean orderIdCreated = false;
-
             using (connectionObj)
             {
-                Console.WriteLine("Enter Customer data ");
-                // Query to be executed
-
+                
                 string queryString = "Insert into OrderDetails (OrderID,Pro_ID,Pro_Name,Store_ID,Quantity) Values "
                     + "(@OrderID,@Pro_ID,@Pro_Name,@Store_ID,@Quantity)";
                 try
@@ -80,6 +80,11 @@ namespace Project1WebApp.Repository
                     for (int i = 0; i < orderRequests.Count; i++)
                     {
                         orderReq = orderRequests[i];
+                        if (!updatePrdQuantity(orderReq.Pro_ID, orderReq.Quantity))
+                        {
+                            Console.WriteLine("Returning back...");
+                            return 0;
+                        }
                         if (!orderIdCreated) { 
                             newOrderId = addToOrder(orderReq.Cus_Id);
                             orderIdCreated = true;
@@ -105,26 +110,35 @@ namespace Project1WebApp.Repository
             return newOrderId;
         }
 
- /*
-    private void updatePrdQuantity()
+ 
+        private Boolean updatePrdQuantity(int product_Id, int product_Quantity)
         {
-            //PLACE ORDER BY UPDATE PRODUCT TABLE, INSERT ORDER TABLE AND INSERT ORDERDETAILS TABLE
-            //UPDATE PRODUCT TABLE
-        IProductRepository productRepo = new IProductRepository();
-
-            int currentProductQuantity = getNewProdQuantity(productList, product_Id);
+            Console.WriteLine("Update Product Quantity.. ");
+            List<ProductModel> productList = _productRepository.getProducts(0);
+            int currentProductQuantity = getCurrentProdQuantity(productList, product_Id);
             String selectedProductName = getProdName(productList, product_Id);
-
+            Boolean hasEnoughQuantity = false;
+            if (currentProductQuantity == 0)
+            {
+                Console.WriteLine("Product Quantity is 0. We cannot process order for this Product:"+ selectedProductName);
+                return false;
+            }
             int prod_NewQuantity = currentProductQuantity - product_Quantity;
             if (prod_NewQuantity > 0)
             {
-                productRepo.updateProductQuantity(product_Id, prod_NewQuantity);
+                hasEnoughQuantity = true;
+            } else {
+                Console.WriteLine("Requested Quantity is more than available. So we are ordering ONLY Quantity - " + currentProductQuantity);
+                prod_NewQuantity = currentProductQuantity;
             }
+            _productRepository.updateProductQuantity(product_Id, prod_NewQuantity);
+
+            return hasEnoughQuantity;
         }
 
-        private int getNewProdQuantity(List<Product> productList, int product_Id)
+        private int getCurrentProdQuantity(List<ProductModel> productList, int product_Id)
         {
-            foreach (Product item in productList)
+            foreach (ProductModel item in productList)
             {
                 if (item.ProductId == product_Id)
                     return item.ProductQuantity;
@@ -132,20 +146,20 @@ namespace Project1WebApp.Repository
             return 0;
         }
 
-        private string getProdName(List<Product> productList, int product_Id)
+        private string getProdName(List<ProductModel> productList, int product_Id)
         {
-            foreach (Product item in productList)
+            foreach (ProductModel item in productList)
             {
                 if (item.ProductId == product_Id)
                     return item.ProductName;
             }
             return null;
         }
-        */
+        
         public int addToOrder(int customerId)
         {
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+
+            SqlConnection connectionObj = _repository.DBConnection();
             Console.WriteLine("In OrdereController - addToOrder ");
 
             int orderId = 0;

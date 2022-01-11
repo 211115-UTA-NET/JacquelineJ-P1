@@ -21,48 +21,33 @@ namespace Project1WebApp.Controllers
         public IActionResult GetOrderDetails()
         {
             Console.WriteLine("GetOrderDetails method111");
-            //CustomerRepository repository = new CustomerRepository();
-            //Console.WriteLine("GetCustomer method222 -- " + repository);
             result = _orderDetailspository.getOrderDetails(null);
-            //Console.WriteLine("GetCustomer method333 -- " + result);
-
             return Ok(result);
         }
 
-        [HttpGet("orders/{order_Id}")]
-        public IActionResult GetProductsByOrderId(string order_Id)
+        [HttpGet("orders/{orderId}")]
+        public IActionResult GetProductsByOrderId(string orderId)
         {
-            Console.WriteLine("GetProductsByOrderId method");
-            //CustomerRepository repository = new CustomerRepository();
-           
-            result = _orderDetailspository.getOrderDetails(order_Id);
-            //Console.WriteLine("GetCustomer method333 -- " + result);
+            Console.WriteLine("GetProductsByOrderId method");           
+            result = _orderDetailspository.getOrderDetails(orderId);
 
             return Ok(result);
         }
 
 
-        [HttpGet("stores/{store_Id}")]
-        public IActionResult GetOrdersByStore(int store_Id)
+        [HttpGet("stores/{storeId:int}")]
+        public IActionResult GetOrdersByStore(int storeId)
         {
-            Console.WriteLine("GetOrdersByStore method");
-            //CustomerRepository repository = new CustomerRepository();
-            
-            result = _orderDetailspository.getOrdersByStore(store_Id);
-            //Console.WriteLine("GetCustomer method333 -- " + result);
-
+            Console.WriteLine("GetOrdersByStore method");            
+            result = _orderDetailspository.getOrdersByStore(storeId);
             return Ok(result);
         }
 
-        [HttpGet("customers/{cust_Id}")]
-        public IActionResult GetOrdersByCostumerId(string cust_Id)
+        [HttpGet("customers/{custId}")]
+        public IActionResult GetOrdersByCostumerId(string custId)
         {
             Console.WriteLine("GetOrdersByCostumerId method");
-            //CustomerRepository repository = new CustomerRepository();
-
-            result = _orderDetailspository.getOrdersByCustomer(cust_Id);
-            //Console.WriteLine("GetCustomer method333 -- " + result);
-
+            result = _orderDetailspository.getOrdersByCustomer(custId);
             return Ok(result);
         }
     }

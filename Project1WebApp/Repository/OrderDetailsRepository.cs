@@ -10,20 +10,21 @@ namespace Project1WebApp.Repository
 {
     public class OrderDetailsRepository : IOrderDetailsRepository
     {
+        private readonly IDBRepository _repository;
+        public OrderDetailsRepository(IDBRepository repository)
+        {
+            _repository = repository;
+        }
         public List<OrderDetailsModel> getOrderDetails(string order_Id)
         {
             //private List<ProductModel> products = new List<ProductModel>();
             Console.WriteLine("OrderDetailsRepository : results : Fetching from OrderdetailsTable table");
-            //OrderDetailsModel orderDetailsObject = new OrderDetailsModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+
+            SqlConnection connectionObj = _repository.DBConnection();
             List<OrderDetailsModel> orderDetailsList = new List<OrderDetailsModel>();
 
             Console.WriteLine("getting order details by orderId " + order_Id);
 
-            //SqlConnectionApp objDB = new SqlConnectionApp();
-            //SqlConnection connectionObj = objDB.DBConnection();
-            //List<OrderDetails> orderList = new List<OrderDetails>();
             using (connectionObj)
             {
                 // Query to be executed
@@ -66,12 +67,8 @@ namespace Project1WebApp.Repository
         public List<OrderDetailsModel> getOrdersByStore(int storeId)
         {
             Console.WriteLine("getOrdersByStore -- " + storeId);
+            SqlConnection connectionObj = _repository.DBConnection();
 
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
-
-            // SqlConnectionApp objDB = new SqlConnectionApp();
-            //SqlConnection connectionObj = objDB.DBConnection();
             List<OrderDetailsModel> orderDetailsList = new List<OrderDetailsModel>();
             using (connectionObj)
             {
@@ -113,9 +110,7 @@ namespace Project1WebApp.Repository
         public List<OrderDetailsModel> getOrdersByCustomer(string customerId)
         {
             Console.WriteLine("getting order details by orderId " + customerId);
-
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
 
             List<OrderDetailsModel> orderDetailsList = new List<OrderDetailsModel>();
             using (connectionObj)

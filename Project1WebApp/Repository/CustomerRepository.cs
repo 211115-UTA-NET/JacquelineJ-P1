@@ -16,12 +16,18 @@ namespace Project1WebApp.Repository
         {
         }
 
+        private readonly IDBRepository _repository;
+
+        public CustomerRepository(IDBRepository repository)
+        {
+            _repository = repository;
+        }
+
         public List<CustomerModel> getCustomers(string cusName)
         {
             Console.WriteLine("CustomerController : results : Fetching from Customer table");
             CustomerModel customerObject = new CustomerModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
 
             List<CustomerModel> customerList = new List<CustomerModel>();
 
@@ -32,11 +38,12 @@ namespace Project1WebApp.Repository
             {
                 stringBuilderObj.Append(" Where CustomerLastName = '" + cusName + "'");
             }
+            
             string Query = stringBuilderObj.ToString();
             //Console.WriteLine("CustomerController : results : Fetching from Customer table" + Query);
             try
             {
-                SqlDataReader reader = objDB.FetchProducts(Query, connectionObj);
+                SqlDataReader reader = _repository.FetchProducts(Query, connectionObj);
                 CustomerModel customerObj;
 
                 using (reader)
@@ -68,16 +75,10 @@ namespace Project1WebApp.Repository
 
         public List<CustomerModel> addCustomerNew(CustomerModel customer)
         {
-            //insert into Customer (CustomerFirstName, CustomerLastName, C_Address1, C_Address2) values
-            //('Tom', 'Hanks', 'Enfield', 'CT');
             Console.WriteLine("In Customer add ");
 
-            CustomerModel customerObject = new CustomerModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
-
-            //SqlConnectionApp objDB = new SqlConnectionApp();
-            //SqlConnection connectionObj = objDB.DBConnection();
+            CustomerModel customerObject = new CustomerModel();            
+            SqlConnection connectionObj = _repository.DBConnection();
             using (connectionObj)
             {
                 Console.WriteLine("Enter Customer data ");

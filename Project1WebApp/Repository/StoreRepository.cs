@@ -6,18 +6,22 @@ namespace Project1WebApp.Repository
 {
     public class StoreRepository : IStoreRepository
     {
-        public List<StoreModel> addNewStore(StoreModel store)
+
+        private readonly IDBRepository _repository;
+
+        public StoreRepository(IDBRepository repository)
+        {
+            _repository = repository;
+        }
+        public void addNewStore(StoreModel store)
         {
             Console.WriteLine("In Store add ");
 
             StoreModel storeObject = new StoreModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
 
             using (connectionObj)
-            {
-                Console.WriteLine("Enter Product data ");
-               
+            {               
                 string queryString = "Insert into Store (StoreId,StoreName,S_Address,ZipCode) Values "
                     + "(@storeId,@storeName,@s_Address,@zipCode)";
 
@@ -28,7 +32,6 @@ namespace Project1WebApp.Repository
                 command.Parameters.AddWithValue("@zipCode", store.Zipcode);
                 try
                 {
-
                     command.ExecuteNonQuery();
                     Console.WriteLine("ExecuteNonQuery");
                 }
@@ -39,21 +42,31 @@ namespace Project1WebApp.Repository
                 }
                 finally { connectionObj.Close(); }
             }
-            return null;
+//            return null;
         }
 
-        public List<StoreModel> getStores()
+        public StoreModel getStore(int storeId)
+        {
+            List<StoreModel> stores = getStores(storeId);
+            StoreModel store = null; 
+            if (stores.Count > 0)
+            {
+                store = stores[0];
+            }
+            return store;
+        }
+
+        public List<StoreModel> getAllStores()
         {
             return getStores(0);
         }
 
-        public List<StoreModel> getStores(int storeId)
+        private List<StoreModel> getStores(int storeId)
         {
             //private List<ProductModel> products = new List<ProductModel>();
             Console.WriteLine("StoreRepository : results : Fetching from Store table");
             StoreModel storeObject = new StoreModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
             List<StoreModel> storeList = new List<StoreModel>();
 
             string storeSelectQuery = "Select * from Store";
@@ -68,7 +81,7 @@ namespace Project1WebApp.Repository
             Console.WriteLine("CustomerController : results : Fetching from Customer table" + Query);
             try
             {
-                SqlDataReader reader = objDB.FetchProducts(Query, connectionObj);
+                SqlDataReader reader = _repository.FetchProducts(Query, connectionObj);
 
                 using (reader)
                 {
@@ -82,6 +95,7 @@ namespace Project1WebApp.Repository
                         storeList.Add(storeObject);
                     }
                     //Console.WriteLine("Customer objects created :");
+
                 }
             }
             catch (Exception ex)

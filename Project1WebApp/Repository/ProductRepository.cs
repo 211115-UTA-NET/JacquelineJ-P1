@@ -10,13 +10,17 @@ namespace Project1WebApp.Repository
 {
     public class ProductRepository : IProductRepository
     {
+        private readonly IDBRepository _repository;
+        public ProductRepository(IDBRepository repository)
+        {
+            _repository = repository;
+        }
         public List<ProductModel> getProducts(int storeId)
         {
             //private List<ProductModel> products = new List<ProductModel>();
             Console.WriteLine("CustomerController : results : Fetching from Customer table");
             ProductModel productObject = new ProductModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
             List<ProductModel> productList = new List<ProductModel>();
 
             string customerSelectQuery = "Select * from Product";
@@ -30,19 +34,17 @@ namespace Project1WebApp.Repository
             //Console.WriteLine("CustomerController : results : Fetching from Customer table" + Query);
             try
             {
-                SqlDataReader reader = objDB.FetchProducts(Query, connectionObj);              
-                   
-                
+                SqlDataReader reader = _repository.FetchProducts(Query, connectionObj);                
                 using (reader)
                 {
                     while (reader.Read())
                     {
-
                         productObject = new ProductModel();
                         productObject.ProductId = reader.GetInt32(0);
                         productObject.ProductName = reader.GetString(1);
                         productObject.StoreId = reader.GetInt32(2);
                         productObject.ProductPrice = reader.GetDecimal(3);
+                        productObject.ProductQuantity = reader.GetInt32(4);
                         productList.Add(productObject);
                     }
                     //Console.WriteLine("Customer objects created :");
@@ -57,7 +59,7 @@ namespace Project1WebApp.Repository
             return productList;
         }
 
-        public List<ProductModel> addNewProduct(ProductModel product)
+        public void addNewProduct(ProductModel product)
         {
             //insert into Customer (CustomerFirstName, CustomerLastName, C_Address1, C_Address2) values
             //('Tom', 'Hanks', 'Enfield', 'CT');
@@ -70,10 +72,8 @@ namespace Project1WebApp.Repository
             int productQuantity = product.ProductQuantity;
 
             ProductModel productObject = new ProductModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
 
-           
             using (connectionObj)
             {
                 Console.WriteLine("Enter Product data ");
@@ -89,26 +89,22 @@ namespace Project1WebApp.Repository
                 command.Parameters.AddWithValue("@productQuantity", productQuantity);
                 try
                 {
-
                     command.ExecuteNonQuery();
                     Console.WriteLine("ExecuteNonQuery");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-
                 }
                 finally { connectionObj.Close(); }
             }
-            return null;
         }
 
-        public List<ProductModel> updateProductQuantity(int ProductId, int ProductQuantity)
+        public void updateProductQuantity(int ProductId, int ProductQuantity)
         {
             Console.WriteLine("Inside updateProductQuantity... productId-" + ProductId + " : Quantity-" + ProductQuantity);
             ProductModel productObject = new ProductModel();
-            DatabaseConnection objDB = new DatabaseConnection();
-            SqlConnection connectionObj = objDB.DBConnection();
+            SqlConnection connectionObj = _repository.DBConnection();
 
             StringBuilder stringbuilderObject = new StringBuilder();
             stringbuilderObject.Append("update Product set ProductQuantity = @productQuantity");
@@ -129,8 +125,6 @@ namespace Project1WebApp.Repository
                 Console.WriteLine(ex.Message);
             }
             finally { connectionObj.Close(); }
-            return null;
-
         }
     }
 
