@@ -12,21 +12,6 @@ namespace Project1WebApp.Repository
     {
 
         /*
-        private string sqlProperties()
-        {
-            StringBuilder stringbuilderObject = new StringBuilder();
-            //string path = "C:\\Users\\ashwi\\OneDrive\\Desktop\\.NET\\PROJECT0\\DBproperties.txt";
-            //StreamReader reader = new StreamReader(path);
-            stringbuilderObject.Append("Data Source=2111-sql-jack.database.windows.net;Initial Catalog=jackie_Project0DB;Persist Security Info=False;User ID=");
-            //stringbuilderObject.Append(reader.ReadLine());
-            stringbuilderObject.Append("; Password=");
-            //stringbuilderObject.Append(reader.ReadLine());
-            //reader.Close();
-            string connectStr = stringbuilderObject.ToString();
-            return (connectStr);
-        }
-        */
-        /*
                 public SqlConnection DBConnection()
                 {
                     StringBuilder stringbuilderObject = new StringBuilder();
